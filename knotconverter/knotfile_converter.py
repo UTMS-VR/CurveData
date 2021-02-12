@@ -10,7 +10,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('--input', '-i', help='input directory containing *.raw or *.json')
     parser.add_argument('--output', '-o', default=".", help='output directory')
-    parser.add_argument('--scale', '-s', default=1.0, help='scaling for Knotplot output')
+    parser.add_argument('--scale', '-s', type=float, default=1.0, help='scaling for Knotplot output')
     args = parser.parse_args()
 
     os.makedirs(args.output,exist_ok=True)
@@ -26,7 +26,7 @@ if __name__ == "__main__":
             print("processing... {} => {}".format(fname, fn))
             X = np.loadtxt(fname)
             m, M = X.min(), X.max()
-            X = 2*(X-m)/(M-m)-1.0 # normalise to [-1,1]
+            X = args.scale*(2*(X-m)/(M-m)-1.0) # normalise to [-args.scale,args.scale]
             Y = []
             for x in X:
                 Y.append({'x':x[0], 'y':x[1], 'z':x[2]})
