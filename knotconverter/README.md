@@ -1,8 +1,9 @@
 File converter for DeformingKnot 
 ==================
-* Reuqires Python 3 with numpy: [Anaconda](https://anaconda.org) is recommended
+* Requires Python 3 with numpy: [Anaconda](https://anaconda.org) is recommended
+* Requires [KnotPlot](https://www.knotplot.com/) 
 * written by S. Kaji
-* This small script is intended to convert various formats representing knots to JSON files used in DeformingKnot and vice versa.
+* This small script is intended to convert various formats representing knots to JSON files used in [DeformingKnot](https://github.com/UTMS-VR/DeformingKnot) and vice versa.
 Currently, only KnotPlot's ascii (raw) data files are supported.
 
 # Usage
