@@ -10,7 +10,7 @@ fn main() {
     let reader = BufReader::new(f);
     let deserialized: Value = serde_json::from_reader(reader).unwrap();
 
-    let curve = twice(&value_as_curve(&deserialized));
+    let curve = n_times(&value_as_curve(&deserialized), 3);
     curve_to_obj(&curve);
 }
 
@@ -24,7 +24,11 @@ struct Curve {
 }
 
 fn value_as_point(v: &Value) -> Point {
-    Point(v["x"].as_f64().unwrap(), v["y"].as_f64().unwrap(), v["z"].as_f64().unwrap())
+    Point(
+        v["x"].as_f64().unwrap(),
+        v["y"].as_f64().unwrap(),
+        v["z"].as_f64().unwrap(),
+    )
 }
 
 fn value_as_curve(value: &Value) -> Curve {
@@ -37,7 +41,7 @@ fn value_as_curve(value: &Value) -> Curve {
 
 fn curve_to_obj(curve: &Curve) {
     let len = curve.points.len();
-    for point in curve.points.iter() {
+    for point in &curve.points {
         println!("v {} {} {}", point.0, point.1, point.2);
     }
     for i in 0..len {
@@ -45,15 +49,16 @@ fn curve_to_obj(curve: &Curve) {
     }
 }
 
-fn twice(curve: &Curve) -> Curve {
+fn n_times(curve: &Curve, n: i32) -> Curve {
     match curve.closed {
         true => {
             let len = curve.points.len();
             let mut newpoints: Vec<Point> = Vec::new();
             for i in 0..len {
-                newpoints.push(copy_point(&curve.points[i]));
                 let j = (i + 1) % len;
-                newpoints.push(average_point(&curve.points[i],  &curve.points[j]));
+                for k in 0..n {
+                    newpoints.push(point_on_line(&curve.points[i], &curve.points[j], (k as f64) / (n as f64)));
+                }
             };
             Curve { points: newpoints, closed: true}
         },
@@ -61,10 +66,10 @@ fn twice(curve: &Curve) -> Curve {
     }
 }
 
-fn average_point(point1: &Point, point2: &Point) -> Point {
-    Point((point1.0 + point2.0) / 2.0, (point1.1 + point2.1) / 2.0, (point1.2 + point2.2) / 2.0)
-}
-
-fn copy_point(point: &Point) -> Point {
-    Point(point.0, point.1, point.2)
+fn point_on_line(point1: &Point, point2: &Point, t: f64) -> Point {
+    Point(
+        (1.0 - t) * point1.0 + t * point2.0,
+        (1.0 - t) * point1.1 + t * point2.1,
+        (1.0 - t) * point1.2 + t * point2.2,
+    )
 }
