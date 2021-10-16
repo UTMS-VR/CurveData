@@ -22,14 +22,13 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build
-        run: |
-          cd general-knotconverter
-          cargo build --release
+        working-directory: general-knotconverter
+        run: cargo build --release
 
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
           name: test-${{ matrix.os }}
           path: |
-            target/release/general-knotconverter
-            target/release/general-knotconverter.exe
+            general-knotconverter/target/release/general-knotconverter
+            general-knotconverter/target/release/general-knotconverter.exe
