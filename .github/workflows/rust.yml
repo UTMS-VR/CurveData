@@ -1,0 +1,34 @@
+name: build
+
+on:
+  push:
+    branches: [ main ]
+    paths: ['general-knotconverter/**', '.github/workflows/**']
+  pull_request:
+    branches: [ main ]
+    paths: ['general-knotconverter/**', '.github/workflows/**']
+    
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build
+        working-directory: general-knotconverter
+        run: cargo build --release
+
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: converter-${{ matrix.os }}
+          path: |
+            general-knotconverter/target/release/general-knotconverter
+            general-knotconverter/target/release/general-knotconverter.exe
