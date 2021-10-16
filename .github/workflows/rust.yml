@@ -2,10 +2,10 @@ name: build
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, actions ]
     paths: ['general-knotconverter/**', '.github/workflows/**']
   pull_request:
-    branches: [ main ]
+    branches: [ main, actions ]
     paths: ['general-knotconverter/**', '.github/workflows/**']
     
   workflow_dispatch:
